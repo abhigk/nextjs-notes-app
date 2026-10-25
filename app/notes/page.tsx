@@ -1,11 +1,25 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { getNotes } from "../services/notes";
 
-const Notes = async ({
-  searchParams,
-}: {
+type NotesProps = {
   searchParams: Promise<{ important?: string }>;
-}) => {
+};
+
+const Notes = ({ searchParams }: NotesProps) => {
+  return (
+    <div>
+      <h2>Notes</h2>
+      <Suspense fallback={<p>Loading notes...</p>}>
+        <NoteList searchParams={searchParams} />
+      </Suspense>
+    </div>
+  );
+};
+
+const NoteList = async ({
+  searchParams,
+}: NotesProps) => {
   const { important } = await searchParams;
   const showImportant = important === "true";
   const allNotes = getNotes();
@@ -14,8 +28,7 @@ const Notes = async ({
     : allNotes;
 
   return (
-    <div>
-      <h2>Notes</h2>
+    <>
       <div>
         <Link href={showImportant ? "/notes" : "/notes?important=true"}>
           {showImportant ? "show all" : "show important only"}
@@ -29,7 +42,8 @@ const Notes = async ({
           </li>
         ))}
       </ul>
-    </div>
+    </>
   );
 };
+
 export default Notes;
