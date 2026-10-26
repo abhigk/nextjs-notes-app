@@ -17,7 +17,7 @@ const NotePage = ({ params }: NotePageProps) => {
 
 const NoteDetails = async ({ params }: NotePageProps) => {
   const { id } = await params;
-  const note = getNoteById(Number(id));
+  const note = await getNoteById(Number(id));
 
   if (!note) {
     notFound();
